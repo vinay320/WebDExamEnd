@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Memory Game</title>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    * {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  color: black;
+}
+
+html {
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+    background: #544a7d;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #ffd452, #544a7d);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right,#8e8151, #ffd452 ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.titleWrapper {
+  margin: 30px auto;
+}
+
+#title, #subtitle {
+  text-align: center;
+}
+
+#title {
+  color: #a81a1a;
+  font-size: 50px;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+#subtitle {
+  font-size: 30px;
+  font-style: italic;
+}
+
+.levelWrapper {
+  margin: 20px auto;
+  text-align: center;
+}
+
+.levelWrapper button {
+  font-size: 20px;
+  border: 1px solid yellow;
+  border-radius: 3px;
+  padding: 1px;
+  margin: 5px;
+  padding: 6px;
+}
+
+.easy, .hard {
+  background: grey;
+}
+
+.medium {
+  background: #ad2727;
+}
+
+.infoWrapper {
+  display: flex;
+  justify-content: space-around;
+  width: 640px;
+  margin: auto;
+}
+
+.infoWrapper>* {
+  flex-basis: 18%;
+}
+
+.counter {
+  font-size: 20px;
+  text-align: center;
+}
+
+.newGame {
+  font-size: 18px;
+  background-color: yellow;
+  border: none;
+  padding: 3px;
+  height: 30px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.newGame:active {
+  transform: translateY(2px);
+}
+
+.score {
+  text-align: center;
+  font-size: 20px;
+}
+
+.wrapper {
+  display: flex;
+  margin: 0 auto;
+}
+
+.board {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 640px;
+  margin: auto;
+  perspective: 1000px;
+}
+
+.tile {
+  height: 170px;
+  flex-basis: 20%;
+  position: relative;
+  margin: 5px;
+  transform: scale(1);
+  transform-style: preserve-3d;
+  transition: transform .5s;
+}
+
+.tile.flip {
+  transform: rotateY(180deg);
+}
+
+img {
+  width: 100px;
+}
+
+.front, .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  background-color: #f7eded;
+  backface-visibility: hidden;
+}
+
+.front {
+  transform: rotateY(180deg);
+}
+
+.popUp {
+  background: rgba(0, 0, 0, .5);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.message {
+  font-size: 50px;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  color: yellow;
+}
+
+.submessage {
+  display: block;
+  font-size: 25px;
+  color: blue;
+  text-align: center;
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="titleWrapper">
+    <h1 id="title"><p class="counter">Attempts left: <br> <span>10</span></p></h1>
+  </div>
+  <div class="levelWrapper">
+    
+  </div>
+  <div class="infoWrapper">
+    
+   
+    <p class="score">Score: <br><span>0</span></p>
+  </div>
+  <div id="wrapper">
+  </div>
+
+  <script>
+    var parentElement = document.getElementById('wrapper');
+var allImages = ['img/dog1.jpg', 'img/dog2.jpg', 'img/dog3.jpg', 'img/dog4.jpg', 'img/dog5.jpg', 'img/dog6.jpg', 'img/dog7.jpg', 'img/dog8.jpg'];
+var levels = {
+  'easy': {
+    'pairs': 4,
+    'attempts': 8
+  },
+  'medium': {
+    'pairs': 6,
+    'attempts': 10
+  },
+  'hard': {
+    'pairs': 8,
+    'attempts': 12
+  }
+};
+var pairs = document.querySelector(".matches");
+var attempts = document.querySelector(".attempts");
+var left = document.querySelector(".counter span");
+var scoreSpan = document.querySelector(".score span");
+var body = document.querySelector('body');
+var img2src = 'img/cover.png';
+var submessage = 'Click anywhere to continue';
+var winMessage = 'Congratulations';
+var loseMessage = 'Sorry. Try again';
+var activeLevel = '#ad2727';
+var inactiveLevels = 'grey';
+
+
+var currentLevel = 'medium';
+var images = allImages.slice(0, levels[currentLevel].pairs)
+var board;
+var tiles;
+var leftCounter = levels[currentLevel].attempts;
+var score = 0;
+var wasClicked = false;
+var firstTile, secondTile;
+var lockBoard = false;
+
+createAll();
+
+buttons.forEach(function(btn) {
+  btn.addEventListener("click", function(e) {
+    buttons.forEach(function(btn) {
+      btn.style.background = inactiveLevels;
+    });
+    this.style.background = activeLevel;
+    currentLevel = e.target.dataset.level;
+    console.log(currentLevel);
+    images = allImages.slice(0, levels[currentLevel].pairs);
+    updateTitle(levels[currentLevel].pairs, levels[currentLevel].attempts);
+    resetBoard();
+    createAll();
+  })
+})
+
+restart.addEventListener("click", createAll);
+
+function addFlip() {
+  tiles.forEach(function(tile) {
+    tile.addEventListener("click", flip);
+  })
+}
+
+function resetCounters() {
+  score = 0;
+  scoreSpan.innerText = score;
+  leftCounter = levels[currentLevel].attempts;
+  updateSubtitle();
+}
+
+function addScore() {
+  score++;
+  scoreSpan.innerText = score;
+}
+
+function calcTiles() {
+  return tiles = images.concat(images);
+}
+
+function updateTitle(pair, attempt) {
+  pairs.innerText = pair;
+  attempts.innerText = attempt;
+}
+
+function updateSubtitle() {
+  left.innerText = leftCounter;
+}
+
+function decreaseAttempts() {
+  leftCounter--;
+  updateSubtitle();
+}
+
+function disableTilesAddScore() {
+  firstTile.removeEventListener("click", flip);
+  secondTile.removeEventListener("click", flip);
+  resetBoard();
+  addScore();
+};
+
+function resetBoard() {
+  [lockBoard, wasClicked] = [false, false];
+  [firstTile, secondTile] = [null, null];
+}
+
+function flip() {
+  if (lockBoard === true) {
+    return;
+  }
+  if (this === firstTile) {
+    return;
+  }
+  this.classList.add('flip');
+  if (!wasClicked) {
+    wasClicked = true;
+    firstTile = this;
+  } else {
+    wasClicked = false;
+    secondTile = this;
+    check();
+  }
+}
+
+function unflipAll() {
+  tiles.forEach(function(tile) {
+    tile.classList.remove('flip');
+  })
+}
+
+function unflipTiles() {
+  if (firstTile) {
+    firstTile.classList.remove("flip");
+    secondTile.classList.remove("flip");
+    if (leftCounter > 0) {
+      setTimeout(resetBoard, 400);
+    }
+  }
+}
+
+function check() {
+  decreaseAttempts();
+  lockBoard = true;
+  if (firstTile.firstChild['src'] == secondTile.firstChild['src']) {
+    disableTilesAddScore();
+    if (score == levels[currentLevel].pairs) {
+    alert("You Won");
+    }
+  } else {
+    setTimeout(unflipTiles, 600);
+  }
+  if (leftCounter == 0 && score != levels[currentLevel].pairs) {
+    
+    alert("You Lost");
+
+  }
+}
+
+
+// board manipulation
+function createAll() {
+  if (board != undefined) {
+    removeAll()
+  };
+  calcTiles();
+  shuffle();
+  board = document.createElement('div');
+  board.classList.add('board');
+  parentElement.appendChild(board);
+  tiles.forEach(function(source) {
+    var div = document.createElement('div');
+    div.classList.add('tile');
+    board.appendChild(div);
+    var img = document.createElement('img');
+    img.classList.add('front');
+    img['src'] = source;
+    var img2 = document.createElement('img');
+    img2.classList.add('back');
+    img2['src'] = img2src;
+    var appendImg = div.appendChild(img);
+    var appendImg2 = div.appendChild(img2);
+  });
+  tiles = document.querySelectorAll('.tile');
+  resetCounters()
+  resetBoard();
+  addFlip();
+}
+
+function removeAll() {
+  board.remove();
+  board = undefined;
+}
+
+function shuffle() {
+  var currentIndex = tiles.length;
+  var randomIndex;
+  var tempValue;
+
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    tempValue = tiles[currentIndex];
+    tiles[currentIndex] = tiles[randomIndex];
+    tiles[randomIndex] = tempValue;
+  }
+  return tiles;
+}
+
+  </script>
+</body>
+
+</html>
