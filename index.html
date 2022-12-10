@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Books</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="./Book.js"></script>
+    <script src="https://kit.fontawesome.com/9664c8b16b.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+            
+            body {
+                background: #544a7d;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #ffd452, #544a7d);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right,#8e8151, #ffd452 ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+
+img {
+    padding: 15px;
+}
+.repo {
+    max-width: 100%;
+    height: auto    ;
+}
+
+.scr-box {
+    overflow-y: auto;
+    height: 500px;
+    float: left;
+    padding: 1rem;
+}
+.dpbox {
+    width: 100%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+
+
+.game a
+{
+    color: black;
+    font-size: 25px;
+}
+            .pi
+            {
+                margin: 30px;
+                border-radius: 30px;
+                margin-left: 200px;
+                width: 1130px;
+                height: 350px;
+                background-image: url(./pexels-nikolaos-dimou-2473183.jpg);
+                background-size: cover;
+                display: flex;
+                justify-content: center;
+            }
+            img
+            {
+                border-radius: 30px;
+            }
+            p
+            {
+                opacity: 2;
+                color: white;
+                font-size: 60px;
+                text-align: center;
+                
+                          
+            }
+            .ll
+            {
+                margin-top: 50px;
+                background-color: rgb(0, 0, 0);
+                height: 100px;
+                width: 80%;
+                opacity: .5;
+
+            }
+        </style>
+</head>
+
+<body>
+    <div class="pi"><div class="ll">
+        <p>Javascript Playground</p>
+    </div></div>
+    <div class="container" style="margin-top: 100px;">
+        
+        <div class="row">
+            <div class="col-md-8">
+                
+                <div class="card mb-4">
+                    <h2 class="card-header" style="background-color: gray;" id="fileName">Book Title</h2>
+                    <div class="card-body">
+                        <div class="dpbox scr-box" id="fileContent">
+                            Select a book on the right
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--SideBar Content-->
+            <div class="col-md-4">
+                <!--Search Widget-->
+                <div class="card my-5">
+                    <h5 class="card-header" style="background-color: gray;">Search</h5>
+                    <div class="card-body">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="keyword" placeholder="Search for...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="button" onclick="performMark()">Search</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer" id="searchstat">
+
+                    </div>
+                </div>
+              
+                <div class="card my-5">
+                    <h5 class="card-header" style="background-color: gray;">Select a Book</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled mb-0">
+                                    <li><a href="#"
+                                            onclick="LoadBK('AliceInWonderland.txt','Alice in Wonderland')">Alice in
+                                            Wonderland</a></li>
+                                    <li><a href="#" onclick="LoadBK('LOTR.txt','Lord of the Rings')">Lord of the
+                                            Rings</a></li>
+                                    <li><a href="#" onclick="LoadBK('JekyllAndHyde.txt','Dr Jekyll and Mr. Hyde')">Dr
+                                            Jekyll and Mr. Hyde</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="card my-5">
+                    <h5 class="card-header" style="background-color: gray;">Most Used Words</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled mb-0" id="mostUsed">
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card my-5">
+                    <h5 class="card-header" style="background-color: gray;">Least Used Words</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <ul class="list-unstyled mb-0" id="leastUsed">
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card my-5">
+                    <h5 class="card-header" style="background-color: gray;">Document Stats</h5>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            <li id="docLength"></li>
+                            <li id="wordCount"></li>
+                            <li id="charCount"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script id="template-ul-items" type="text/template">
+            <li>
+               {{val}}
+            </li>    
+        </script>
+        
+        <div class="game">
+            <a href="./index2.html"><button>NEXT</button></a>
+        </div>
+</body>
+
+</html>
